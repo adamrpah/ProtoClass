@@ -26,14 +26,15 @@ def main(args):
     scores = {}
 
     #Go through the individual sheets
-    for student_answer in glob.glob(os.path.join( args.assign_dir, '*') ):
+    for student_answer in glob.glob(os.path.join( args.assign_dir, '*xlsx') ):
+        print(student_answer)
         student_df = pd.read_excel(student_answer, sheet=0)
         #Check to make sure that the column headings are equal
         if (student_df.columns != answer_df.columns).all():
             print('ERROR with: %s' % student_answer)
         else:
             #Proceed with grading
-            equal = (answer_key['Your Answer'].str.lower() == student_df['Your Answer'].str.lower())
+            equal = (answer_df['Your Answer'].str.lower() == student_df['Your Answer'].str.lower())
             #Count all the false values
             eqval = equal.value_counts()
             #Pull the students name
@@ -47,7 +48,7 @@ def main(args):
         print('Student,Score', file=wfile)
 
         for sname in sorted( list(scores.keys()) ):
-            print( '%s,%d' % (sname, scores[sname]) )
+            print( '%s,%d' % (sname, scores[sname]), file=wfile)
 
 
 if __name__ == '__main__':
